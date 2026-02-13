@@ -1,23 +1,14 @@
-"""Base engine interface for all historic chess engines"""
-
-from abc import ABC, abstractmethod
-
+import engine
 import chess
 
-from chess_museum.core.evaluator import BaseEvaluator
 
-
-class BaseEngine(ABC):
-    """Abstract base class for all chess engines in the museum"""
-
-    def __init__(self, evaluator: BaseEvaluator) -> None:
+class Turochamp(engine.BaseEngine):
+    def __init__(self) -> None:
         self.name: str = "BaseEngine"
-        self.year: int = 1950
+        self.year: int = 1947
         self.description: str = ""
-        self.author: str = ""
-        self.evaluator: BaseEvaluator = evaluator
+        self.author: str = "Alan Turing"
 
-    @abstractmethod
     def get_best_move(self, board: chess.Board) -> chess.Move:
         """
         Calculate and return the best move for the current position.
@@ -28,6 +19,7 @@ class BaseEngine(ABC):
         Returns:
             Best move found by the engine
         """
+        
         ...
 
     def get_info(self) -> dict[str, str | int]:
