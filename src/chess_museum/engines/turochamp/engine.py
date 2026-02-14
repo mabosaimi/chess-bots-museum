@@ -1,17 +1,20 @@
-import engine
 import chess
 
+from chess_museum.core.engine import BaseEngine
+from chess_museum.engines.turochamp.evaluate import TurochampEvaluator
+from chess_museum.search.minimax import minimax_search
 
-class Turochamp(engine.BaseEngine):
+
+class Turochamp(BaseEngine):
     def __init__(self) -> None:
-        self.name: str = "BaseEngine"
-        self.year: int = 1947
-        self.description: str = ""
-        self.author: str = "Alan Turing"
+        super().__init__(TurochampEvaluator())
+        self.name = "Turochamp"
+        self.year = 1948
+        self.description = "One of the earliest chess engines, developed by Alan Turing and David Champernowne. It used a simple evaluation function and a minimax search to select moves."
+        self.author = "Alan Turing & David Champernowne"
 
     def get_best_move(self, board: chess.Board) -> chess.Move:
-        """
-        Calculate and return the best move for the current position.
+        """Calculate and return the best move for the current position.
 
         Args:
             board: Current board state
@@ -19,14 +22,4 @@ class Turochamp(engine.BaseEngine):
         Returns:
             Best move found by the engine
         """
-        
-        ...
-
-    def get_info(self) -> dict[str, str | int]:
-        """Return metadata about the engine"""
-        return {
-            "name": self.name,
-            "year": self.year,
-            "description": self.description,
-            "author": self.author,
-        }
+        return minimax_search(board, depth=3, evaluator=self.evaluator)

@@ -12,39 +12,34 @@ Checks and mate threats: Score 1 point for the threat of mate and a half-point f
 
 import chess
 
+from chess_museum.core.evaluator import BaseEvaluator
+
 PIECE_VALUES = {
     chess.PAWN: 1.0,
     chess.KNIGHT: 3.0,
-    chess.BISHOP: 3.0,
+    chess.BISHOP: 3.5,
     chess.ROOK: 5.0,
     chess.QUEEN: 10.0,
     chess.KING: 0.0,
 }
 
 
-def evaluate(board: chess.Board) -> float:
-    """
-    Evaluate the current position from the perspective of white.
-    Args:
-        board: Position to evaluate
+class TurochampEvaluator(BaseEvaluator):
+    """Alan Turing's 1948 chess evaluation function"""
 
-    Returns:
-        Score in centipawns (positive = white advantage)
-    """
-    score = _count_material(board)
-    
-    # TODO: rest of the evaluation features
-    return score
+    def evaluate(self, board: chess.Board) -> float:
+        """Evaluate position from white's perspective"""
+        score = self._count_material(board)
+        # TODO: rest of the evaluation features
+        return score
 
-
-def _count_material(board: chess.Board) -> float:
-    """Returns material difference (white - black)"""
-
-    score = 0.0
-    for square in chess.SQUARES:
-        piece = board.piece_at(square)
-        if piece:
-            value = PIECE_VALUES[piece.piece_type]
-            score += value if piece.color == chess.WHITE else -value
-
-    return score
+    @staticmethod
+    def _count_material(board: chess.Board) -> float:
+        """Returns material difference (white - black)"""
+        score = 0.0
+        for square in chess.SQUARES:
+            piece = board.piece_at(square)
+            if piece:
+                value = PIECE_VALUES[piece.piece_type]
+                score += value if piece.color == chess.WHITE else -value
+        return score
