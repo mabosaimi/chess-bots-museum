@@ -11,6 +11,9 @@ importers:
 
   .:
     dependencies:
+      '@lichess-org/chessground':
+        specifier: ^10.0.2
+        version: 10.0.2
       '@tailwindcss/vite':
         specifier: ^4.1.18
         version: 4.1.18(vite@8.0.0-beta.14(@types/node@24.10.13)(jiti@2.6.1))
@@ -208,6 +211,9 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
+
+  '@lichess-org/chessground@10.0.2':
+    resolution: {integrity: sha512-/te9eXc7Rcft0cPPftR5eTg8IyZ/xws4GjrQut0vxHTc7BOjC9dhAca0hWVxbtV3Mv4ezGCEoWk2dWCeMdW8oA==}
 
   '@napi-rs/wasm-runtime@1.1.1':
     resolution: {integrity: sha512-p64ah1M1ld8xjWv3qbvFwHiFVWrq1yFvV4f7w+mzaqiR4IlSgkqhcRdHwsGgomwzBH51sRY4NEowLxnaBjcW/A==}
@@ -958,6 +964,8 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
+
+  '@lichess-org/chessground@10.0.2': {}
 
   '@napi-rs/wasm-runtime@1.1.1':
     dependencies:
