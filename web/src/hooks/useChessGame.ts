@@ -2,29 +2,29 @@ import type { Dests, Key } from "@lichess-org/chessground/types";
 import { useCallback, useState } from "react";
 
 export interface GameState {
-  fen: string;
-  dests: Dests;
-  turnColor: "white" | "black";
-  isGameOver: boolean;
-  lastMove?: [Key, Key];
-  isCheck: boolean;
-  outcome: string | null;
+	fen: string;
+	dests: Dests;
+	turnColor: "white" | "black";
+	isGameOver: boolean;
+	lastMove?: [Key, Key];
+	isCheck: boolean;
+	outcome: string | null;
 }
 
 const INITIAL_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
 export function useChessGame(runPython: (code: string) => Promise<any>) {
-  const [gameState, setGameState] = useState<GameState>({
-    fen: INITIAL_FEN,
-    dests: new Map(),
-    turnColor: "white",
-    isGameOver: false,
-    isCheck: false,
-    outcome: null,
-  });
+	const [gameState, setGameState] = useState<GameState>({
+		fen: INITIAL_FEN,
+		dests: new Map(),
+		turnColor: "white",
+		isGameOver: false,
+		isCheck: false,
+		outcome: null,
+	});
 
-  const initGame = useCallback(async () => {
-    await runPython(`
+	const initGame = useCallback(async () => {
+		await runPython(`
 import chess
 import json
 
@@ -61,23 +61,23 @@ def get_game_state():
     })
 `);
 
-    const stateJson = await runPython("get_game_state()");
-    const state = JSON.parse(stateJson);
+		const stateJson = await runPython("get_game_state()");
+		const state = JSON.parse(stateJson);
 
-    setGameState({
-      fen: state.fen,
-      dests: new Map(Object.entries(state.dests)) as Dests,
-      turnColor: state.turnColor,
-      isGameOver: state.isGameOver,
-      isCheck: state.isCheck,
-      outcome: state.outcome,
-    });
-  }, [runPython]);
-  const pushMove = useCallback(
-    async (orig: Key, dest: Key) => {
-      const uci = `${orig}${dest}`;
-      // TODO: add promotion ui instead of always promoting to queen
-      const moveResult = await runPython(`
+		setGameState({
+			fen: state.fen,
+			dests: new Map(Object.entries(state.dests)) as Dests,
+			turnColor: state.turnColor,
+			isGameOver: state.isGameOver,
+			isCheck: state.isCheck,
+			outcome: state.outcome,
+		});
+	}, [runPython]);
+	const pushMove = useCallback(
+		async (orig: Key, dest: Key) => {
+			const uci = `${orig}${dest}`;
+			// TODO: add promotion ui instead of always promoting to queen
+			const moveResult = await runPython(`
 import json
 move = chess.Move.from_uci("${uci}")
 if move not in board.legal_moves:
@@ -86,35 +86,35 @@ board.push(move)
 get_game_state()
 `);
 
-      const state = JSON.parse(moveResult);
+			const state = JSON.parse(moveResult);
 
-      setGameState({
-        fen: state.fen,
-        dests: new Map(Object.entries(state.dests)) as Dests,
-        turnColor: state.turnColor,
-        isGameOver: state.isGameOver,
-        lastMove: [orig, dest],
-        isCheck: state.isCheck,
-        outcome: state.outcome,
-      });
-    },
-    [runPython],
-  );
+			setGameState({
+				fen: state.fen,
+				dests: new Map(Object.entries(state.dests)) as Dests,
+				turnColor: state.turnColor,
+				isGameOver: state.isGameOver,
+				lastMove: [orig, dest],
+				isCheck: state.isCheck,
+				outcome: state.outcome,
+			});
+		},
+		[runPython],
+	);
 
-  const resetGame = useCallback(async () => {
-    await runPython("board.reset()");
-    const stateJson = await runPython("get_game_state()");
-    const state = JSON.parse(stateJson);
+	const resetGame = useCallback(async () => {
+		await runPython("board.reset()");
+		const stateJson = await runPython("get_game_state()");
+		const state = JSON.parse(stateJson);
 
-    setGameState({
-      fen: state.fen,
-      dests: new Map(Object.entries(state.dests)) as Dests,
-      turnColor: state.turnColor,
-      isGameOver: state.isGameOver,
-      isCheck: state.isCheck,
-      outcome: state.outcome,
-    });
-  }, [runPython]);
+		setGameState({
+			fen: state.fen,
+			dests: new Map(Object.entries(state.dests)) as Dests,
+			turnColor: state.turnColor,
+			isGameOver: state.isGameOver,
+			isCheck: state.isCheck,
+			outcome: state.outcome,
+		});
+	}, [runPython]);
 
-  return { gameState, initGame, pushMove, resetGame };
+	return { gameState, initGame, pushMove, resetGame };
 }
